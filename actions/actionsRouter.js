@@ -58,4 +58,20 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
+// Update an action
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = await Actions.update(req.params.id);
+        const { project_id, description, notes } = await Actions.update(req.body); 
+        if (!id || !project_id || !description || !notes){
+            res.status(400).json({ message: "Please provide all fields in order to update"});
+        } else {
+            const updatedAction = await Actions.insert(req.body);
+            res.status(200).json(updatedAction);
+        }
+    } catch {
+        res.status(500).json({ message: "Error updating this action."});
+    }
+})
+
 module.exports = router;
