@@ -77,13 +77,13 @@ router.delete('/:id', async (req, res) => {
 // Update a project
 router.put('/:id', async (req, res) => {
     try {
-        const { id } = await Projects.update(req.params.id);
-        const { name, description } = await Projects.update(req.body);
-        if (!name || !description || !id) {
+        // const { id } = await Projects.update(req.params.id);
+        // const { name, description } = await Projects.update(req.body);
+        const project = await Projects.update(req.params.id, req.body);
+        if (!project.name || !project.description || !project.id) {
             res.status(400).json({ message: "Please provide a project ID and its name and description to update"});
         } else {
-            const updatedProject = await Projects.insert(req.body);
-            res.status(201).json(updatedProject);
+            res.status(201).json(project);
         }
     } catch {
         res.status(500).json({ message: "Error updating this project."});
