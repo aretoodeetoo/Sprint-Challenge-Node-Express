@@ -45,4 +45,19 @@ router.get('/actions/:projectID', (req, res) => {
         })
 })
 
+// Add a project
+router.post('/', async (req, res) => {
+    try{
+        const { name, description } = req.body;
+        if (!name || !description){
+            res.status(400).json({ message: "Please provide both a name and description for this project"});
+        } else {
+            newProject = await Projects.insert(req.body);
+            res.status(201).json(newProject);
+        }
+    } catch {
+        res.status(500).json({ message: "The project could not be added to our DB. Sorry."});
+    }
+})
+
 module.exports = router;
