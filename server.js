@@ -2,6 +2,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const actionsRouter = require('./actions/actionsRouter');
 const projectRouter = require('./projects/projectRouter');
@@ -9,6 +10,7 @@ const projectRouter = require('./projects/projectRouter');
 // server commands
 const server = express();
 server.use(express.json());
+server.use(cors());
 server.use(helmet());
 server.use(morgan('dev'));
 
