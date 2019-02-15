@@ -76,18 +76,25 @@ router.delete('/:id', async (req, res) => {
 
 // Update a project
 router.put('/:id', async (req, res) => {
-    try {
-        // const { id } = await Projects.update(req.params.id);
-        // const { name, description } = await Projects.update(req.body);
-        const project = await Projects.update(req.params.id, req.body);
-        if (!project.name || !project.description || !project.id) {
-            res.status(400).json({ message: "Please provide a project ID and its name and description to update"});
-        } else {
-            res.status(201).json(project);
-        }
-    } catch {
-        res.status(500).json({ message: "Error updating this project."});
-    }
+    const id = req.params.id;
+    const changes = req.body;
+
+    Projects
+        .update(id, changes)
+        .then(update => {
+            if(!req.body.name || !req.body.description){
+                res.status(400).json({ message: "Please provide name and description to update"})
+            }
+            else if(update){
+                res.status(200).json(update);
+            }
+            else {
+                res.status(404).json(null);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Error"});
+        });
 })
 
 module.exports = router;

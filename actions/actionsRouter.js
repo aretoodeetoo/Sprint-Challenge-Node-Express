@@ -59,22 +59,24 @@ router.delete('/:id', async (req, res) => {
 })
 
 // Update an action
-router.put('/:id', async (req, res) => {
-    try {
-        const { id } = await Actions.update(req.params.id);
-        const { project_id, description, notes } = await Actions.update(req.body); 
-        if (!id || !project_id || !description || !notes){
-            res.status(400).json({ message: "Please provide all fields in order to update"});
-        } else if (!id) {
-            res.status(404).json(null);
-        }
-        else {
-            const updatedAction = await Actions.insert(req.body);
-            res.status(200).json(updatedAction);
-        }
-    } catch {
-        res.status(500).json({ message: "Error updating this action."});
-    }
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const change = req.body;
+
+    Actions
+        .update(id, change)
+        .then(update => {
+            if (!req.body.name || !req.body.description || !req.body.project_id){
+                res.status(400).json({ message: "Please include a project id, a name, and a description for this action"})
+            } else if (update){
+                res.status(200).json(update);
+            } else {
+                res.status(404).json(null);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: "This action could not be updated"})
+        });
 })
 
 module.exports = router;
