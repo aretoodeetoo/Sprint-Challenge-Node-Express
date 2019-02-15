@@ -65,7 +65,10 @@ router.put('/:id', async (req, res) => {
         const { project_id, description, notes } = await Actions.update(req.body); 
         if (!id || !project_id || !description || !notes){
             res.status(400).json({ message: "Please provide all fields in order to update"});
-        } else {
+        } else if (!id) {
+            res.status(404).json(null);
+        }
+        else {
             const updatedAction = await Actions.insert(req.body);
             res.status(200).json(updatedAction);
         }
