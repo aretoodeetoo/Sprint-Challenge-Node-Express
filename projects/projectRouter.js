@@ -28,4 +28,21 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// Get actions from a specific project
+router.get('/actions/:projectID', (req, res) => {
+    const { projectID } = req.params;
+    Projects
+        .getProjectActions(projectID)
+        .then(projectActions => {
+            if (projectActions === 0){
+                res.status(404).json({ message: "No actions for this project"});
+            } else {
+                res.status(200).json(projectActions);
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Error retrieving project actions"});
+        })
+})
+
 module.exports = router;
