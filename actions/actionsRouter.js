@@ -66,8 +66,8 @@ router.put('/:id', (req, res) => {
     Actions
     .update(id, changes)
     .then(update => {
-        if(!req.body.notes || !req.body.description){
-            res.status(400).json({ message: "Please provide name and description to update"})
+        if(!req.body.notes || !req.body.description || !req.body.project_id){
+            res.status(400).json({ message: "Please provide project ID, notes, and description to update"})
         }
         else if(update){
             res.status(200).json(update);
