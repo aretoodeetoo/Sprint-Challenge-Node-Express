@@ -29,4 +29,19 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// Add an action
+router.post('/', async (req, res) => {
+    try {
+        const { project_id, description, notes, completed } = req.body;
+        if (!project_id || !description || !notes ){
+            res.status(400).json({ message: "You must have an existing project ID, a description, and notes attached to this input"});
+        } else {
+            const newAction = await Actions.insert(req.body);
+            res.status(201).json(newAction);
+        }
+    } catch {
+        res.status(500).json({ message: "The action could not be added."});
+    }
+})
+
 module.exports = router;
